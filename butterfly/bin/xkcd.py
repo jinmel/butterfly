@@ -15,6 +15,7 @@ from random import randint
 
 latest_xkcd_url = 'http://xkcd.com/info.0.json'
 xkcd_url_fmt = 'http://xkcd.com/{0}/info.0.json'
+xkcd_json_db_dir = '/tmp/xkcd_db.json'
 
 parser = argparse.ArgumentParser(description="Butterfly xkcd viewer")
 parser.add_argument('-n','--number', action="store",dest='number',
@@ -24,13 +25,14 @@ parser.add_argument('-n','--number', action="store",dest='number',
 parser.add_argument('-u','--update', action="store_true",dest='update')
 args = parser.parse_args()
 number = args.number[0]
-db = TinyDB('./xkcd_db.json',storage=CachingMiddleware(JSONStorage))
+db = TinyDB(xkcd_json_db_dir,storage=CachingMiddleware(JSONStorage))
 
 if args.update:
     r = requests.get(latest_xkcd_url)
     response = loads(r.text.decode('utf-8'))
     latest_num = response['num']
-    for xkcd_num in tqdm(xrange(404,latest_num)):
+    current_num = len(db.all())
+    for xkcd_num in tqdm(xrange(current_num+1,latest_num+1)):
         url = xkcd_url_fmt.format(xkcd_num)
         r = requests.get(url)
         try:
