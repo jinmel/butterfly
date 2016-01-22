@@ -39,7 +39,11 @@ if args.update:
             data = loads(r.text)
             db.insert(data)
         except:
-            pass
+            print 'Retry:',xkcd_num
+            r = requests.get(url)
+            data = loads(r.text)
+            db.insert(data)
+
 else:
     for x in xrange(number):
         random_xkcd = randint(1,len(db.all()))
@@ -51,6 +55,11 @@ else:
             title = stored_json['title']
             with html():
                 print '<img src="{0}" alt="{1}"/>'.format(img_url,title)
+        else:
+            print 'xkcd #{0} not found in database. Requesting for json...'
+            r = requests.get(xkcd_url_fmt.format(random_xkcd))
+            data = loads(r.text)
+            db.insert(data)
 
 db.close()
 
