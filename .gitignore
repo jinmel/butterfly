@@ -8,3 +8,4 @@ node_modules/
 sass/scss
 *.egg-info/
 .ropeproject
+build/

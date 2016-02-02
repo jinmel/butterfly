@@ -512,7 +512,8 @@
 
     Terminal.prototype.linkify = function(t) {
       var emailAddressPattern, part, pseudoUrlPattern, urlPattern;
-      urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+      urlPattern = new RegExp('(\\b((https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;]*)(?=&gt;)|\n\\b((https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;]*))', 'gim');
+      console.log(urlPattern);
       pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
       emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
       return ((function() {
@@ -1468,14 +1469,14 @@
             key = "\x1bOH";
             break;
           }
-          key = "\x1bOH";
+          key = "\x1b[H";
           break;
         case 35:
           if (this.applicationKeypad) {
             key = "\x1bOF";
             break;
           }
-          key = "\x1bOF";
+          key = "\x1b[F";
           break;
         case 33:
           if (ev.shiftKey) {

@@ -398,8 +398,11 @@ class Terminal
 
   linkify: (t) ->
     # http://stackoverflow.com/questions/37684/how-to-replace-plain-urls-with-links
-    urlPattern = (
-      /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim)
+    urlPattern = new RegExp '''
+      (\\b((https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;]*)(?=&gt;)|
+      \\b((https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;]*))
+    ''', 'gim'
+    console.log urlPattern
     pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim
     emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
     (part
@@ -1358,14 +1361,14 @@ class Terminal
         if @applicationKeypad
           key = "\x1bOH"
           break
-        key = "\x1bOH"
+        key = "\x1b[H"
 
       # end
       when 35
         if @applicationKeypad
           key = "\x1bOF"
           break
-        key = "\x1bOF"
+        key = "\x1b[F"
 
       # page up
       when 33
@@ -2455,8 +2458,7 @@ class Terminal
         # motion: ^[[b;x;yT
         when 25 # show cursor
           @cursorHidden = false
-        # alt screen buffer cursor
-        #@saveCursor()
+
         when 1049, 47, 1047 # alt screen buffer
           unless @normal
             normal =
