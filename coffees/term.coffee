@@ -398,8 +398,11 @@ class Terminal
 
   linkify: (t) ->
     # http://stackoverflow.com/questions/37684/how-to-replace-plain-urls-with-links
-    urlPattern = (
-      /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim)
+    urlPattern = new RegExp '''
+      (\\b((https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;]*)(?=&gt;)|
+      \\b((https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;]*))
+    ''', 'gim'
+    console.log urlPattern
     pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim
     emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
     (part
